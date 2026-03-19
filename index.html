@@ -9,36 +9,36 @@
 </head>
 <body>
   <div class="calc">
-    <input type="text" class="display" name="display" autofocus>
+    <input type="text" class="display" name="display" autocomplete="off" autofocus>
     <div class="calc-row">
       <button class="calc-op" id="all-clear">AC</button>
       <button class="calc-op" id="clear-entry">CE</button>
       <button class="calc-op" id="back">⌫</button>
-      <button class="op">÷</button>
+      <button class="op" id="div">÷</button>
     </div>
     <div class="calc-row">
-      <button class="num">1</button>
-      <button class="num">2</button>
-      <button class="num">3</button>
-      <button class="op">×</button>
+      <button class="num" id="num-1">1</button>
+      <button class="num" id="num-2">2</button>
+      <button class="num" id="num-3">3</button>
+      <button class="op" id="mul">×</button>
     </div>
     <div class="calc-row">
-      <button class="num">4</button>
-      <button class="num">5</button>
-      <button class="num">6</button>
-      <button class="op">+</button>
+      <button class="num" id="num-4">4</button>
+      <button class="num" id="num-5">5</button>
+      <button class="num" id="num-6">6</button>
+      <button class="op" id="add">+</button>
     </div>
     <div class="calc-row">
-      <button class="num">7</button>
-      <button class="num">8</button>
-      <button class="num">9</button>
-      <button class="op">-</button>
+      <button class="num" id="num-7">7</button>
+      <button class="num" id="num-8">8</button>
+      <button class="num" id="num-9">9</button>
+      <button class="op" id="sub">-</button>
     </div>
     <div class="calc-row">
-      <button class="num">0</button>
-      <button class="num">.</button>
+      <button class="num" id="num-0">0</button>
+      <button class="num" id="num-decimal">.</button>
       <button class="num" id="sign-change">+/-</button>
-      <button class="op">=</button>
+      <button class="op" id="equal">=</button>
     </div>
   </div>
 </body>
