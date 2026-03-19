@@ -9,9 +9,11 @@
 </head>
 <body>
   <div class="calc">
-    <div class="display"></div>
+    <input type="text" class="display" name="display" autofocus>
     <div class="calc-row">
-      <button class="clear">AC</button>
+      <button class="calc-op" id="all-clear">AC</button>
+      <button class="calc-op" id="clear-entry">CE</button>
+      <button class="calc-op" id="back">⌫</button>
       <button class="op">÷</button>
     </div>
     <div class="calc-row">
@@ -35,7 +37,7 @@
     <div class="calc-row">
       <button class="num">0</button>
       <button class="num">.</button>
-      <button class="num unary-op">+/-</button>
+      <button class="num" id="sign-change">+/-</button>
       <button class="op">=</button>
     </div>
   </div>
