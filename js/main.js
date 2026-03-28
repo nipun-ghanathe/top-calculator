@@ -91,7 +91,7 @@ for (let num of nums) {
 
 function handleOperator(op, displayValue) {
   if (!state.operator) {
-    state.operandA = displayValue ? +displayValue : 0
+    state.operandA = getDisplayValue() ? +getDisplayValue() : 0
     state.operator = op !== '=' ? op : null
     state.clearDisplay = true
     return displayValue
