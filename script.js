@@ -14,6 +14,11 @@ const state = {
   clearDisplay: false,
 }
 
+function calculate(a, operator, b) {
+  if (!operations[operator]) return null
+  return operations[operator](a, b)
+}
+
 function clickButton(eleId) {
   document.querySelector(`#${eleId}`).click()
 }
@@ -21,6 +26,18 @@ function clickButton(eleId) {
 const otherAllowedKeys = ['Backspace', 'Enter']
 
 const display = document.querySelector('.display')
+
+function getDisplayValue() {
+  return display.value
+}
+
+function setDisplayValue(value) {
+  display.value = value
+}
+
+function clearDisplay() {
+  display.value = ''
+}
 
 display.addEventListener('keydown', (e) => {
   if (['Backspace', 'Delete'].includes(e.key)) return
@@ -62,14 +79,46 @@ const nums = document.querySelectorAll('.num:not(#sign-change)')
 for (let num of nums) {
   num.addEventListener('click', () => {
     if (state.clearDisplay) {
-      display.value = ''
+      clearDisplay()
       state.clearDisplay = false
     }
     const value = num.textContent
-    if (value !== '.' || !display.value.includes('.')) {
-      display.value += value
+    if (value !== '.' || !getDisplayValue().includes('.')) {
+      setDisplayValue(getDisplayValue() + value)
     }
   })
+}
+
+function handleOperator(op, displayValue) {
+  if (!state.operator) {
+    state.operandA = displayValue ? +displayValue : 0
+    state.operator = op !== '=' ? op : null
+    state.clearDisplay = true
+    return displayValue
+  }
+
+  if (state.clearDisplay && op !== '=') {
+    state.operator = op
+    return displayValue
+  }
+
+  state.operandB = +displayValue
+
+  const result = calculate(state.operandA, state.operator, state.operandB)
+
+  if (result === null) return displayValue
+
+  state.clearDisplay = true
+  state.operandB = null
+  if (op !== '=') {
+    state.operandA = result
+    state.operator = op
+  } else {
+    state.operandA = null
+    state.operator = null
+  }
+
+  return result
 }
 
 const opBtns = document.querySelectorAll('.op')
@@ -77,45 +126,24 @@ for (let opBtn of opBtns) {
   const op = opBtn.textContent
 
   opBtn.addEventListener('click', () => {
-    if (!state.operator) {
-      state.operandA = display.value ? +display.value : 0
-      state.operator = op !== '=' ? op : null
-      state.clearDisplay = true
-    } else {
-      if (state.clearDisplay && op !== '=') {
-        state.operator = op
-        return
-      }
-      state.operandB = +display.value
-      if (!operations[state.operator]) return
-      const result = operations[state.operator](state.operandA, state.operandB)
-      display.value = result
-      state.clearDisplay = true
-      state.operandB = null
-      if (opBtn.textContent !== '=') {
-        state.operandA = result
-        state.operator = op
-      } else {
-        state.operandA = null
-        state.operator = null
-      }
-    }
+    const result = handleOperator(op, getDisplayValue())
+    setDisplayValue(result)
   })
 }
 
 const signChangeBtn = document.querySelector('#sign-change')
 signChangeBtn.addEventListener('click', () => {
-  if (!display.value) return
-  if (display.value.startsWith('-')) {
-    display.value = display.value.slice(1)
+  if (!getDisplayValue()) return
+  if (getDisplayValue().startsWith('-')) {
+    setDisplayValue(getDisplayValue().slice(1))
   } else {
-    display.value = '-' + display.value
+    setDisplayValue('-' + getDisplayValue())
   }
 })
 
 const allClearBtn = document.querySelector('#all-clear')
 allClearBtn.addEventListener('click', () => {
-  display.value = ''
+  clearDisplay()
   state.operandA = null
   state.operandB = null
   state.operator = null
@@ -123,10 +151,10 @@ allClearBtn.addEventListener('click', () => {
 
 const clearEntryBtn = document.querySelector('#clear-entry')
 clearEntryBtn.addEventListener('click', () => {
-  display.value = ''
+  clearDisplay()
 })
 
 const backBtn = document.querySelector('#back')
 backBtn.addEventListener('click', () => {
-  display.value = display.value.slice(0, -1)
+  setDisplayValue(getDisplayValue().slice(0, -1))
 })
