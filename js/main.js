@@ -1,43 +1,11 @@
-const operations = {
-  '+': (a, b) => a + b,
-  '-': (a, b) => a - b,
-  '*': (a, b) => a * b,
-  '/': (a, b) => a / b,
-}
-operations['×'] = operations['*']
-operations['÷'] = operations['/']
-
-const state = {
-  operandA: null,
-  operandB: null,
-  operator: null,
-  clearDisplay: false,
-}
-
-function calculate(a, operator, b) {
-  if (!operations[operator]) return null
-  return operations[operator](a, b)
-}
+import { state, handleOperator } from './state.js'
+import { getDisplayValue, setDisplayValue, clearDisplay } from './ui.js'
 
 function clickButton(eleId) {
   document.querySelector(`#${eleId}`).click()
 }
 
-const otherAllowedKeys = ['Backspace', 'Enter']
-
 const display = document.querySelector('.display')
-
-function getDisplayValue() {
-  return display.value
-}
-
-function setDisplayValue(value) {
-  display.value = value
-}
-
-function clearDisplay() {
-  display.value = ''
-}
 
 display.addEventListener('keydown', (e) => {
   if (['Backspace', 'Delete'].includes(e.key)) return
@@ -87,38 +55,6 @@ for (let num of nums) {
       setDisplayValue(getDisplayValue() + value)
     }
   })
-}
-
-function handleOperator(op, displayValue) {
-  if (!state.operator) {
-    state.operandA = getDisplayValue() ? +getDisplayValue() : 0
-    state.operator = op !== '=' ? op : null
-    state.clearDisplay = true
-    return displayValue
-  }
-
-  if (state.clearDisplay && op !== '=') {
-    state.operator = op
-    return displayValue
-  }
-
-  state.operandB = +displayValue
-
-  const result = calculate(state.operandA, state.operator, state.operandB)
-
-  if (result === null) return displayValue
-
-  state.clearDisplay = true
-  state.operandB = null
-  if (op !== '=') {
-    state.operandA = result
-    state.operator = op
-  } else {
-    state.operandA = null
-    state.operator = null
-  }
-
-  return result
 }
 
 const opBtns = document.querySelectorAll('.op')
