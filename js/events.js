@@ -1,5 +1,5 @@
 import { state, handleOperator } from './state.js'
-import { getDisplayValue, setDisplayValue, clearDisplay } from './ui.js'
+import { render } from './ui.js'
 
 export function initEvents() {
   const display = document.querySelector('.display')
@@ -58,14 +58,16 @@ function handleNumberButtons() {
   for (let num of nums) {
     num.addEventListener('click', () => {
       if (state.clearDisplay) {
-        clearDisplay()
+        state.displayValue = ''
         state.clearDisplay = false
       }
 
       const value = num.textContent
-      if (value !== '.' || !getDisplayValue().includes('.')) {
-        setDisplayValue(getDisplayValue() + value)
+      if (value !== '.' || !state.displayValue.includes('.')) {
+        state.displayValue += value
       }
+
+      render()
     })
   }
 }
@@ -75,34 +77,38 @@ function handleOperatorButtons() {
 
   for (let opBtn of opBtns) {
     opBtn.addEventListener('click', () => {
-      const result = handleOperator(opBtn.textContent, getDisplayValue())
-      setDisplayValue(result)
+      state.displayValue = handleOperator(opBtn.textContent, state.displayValue)
+      render()
     })
   }
 }
 
 function handleSpecialButtons() {
   document.querySelector('#sign-change').addEventListener('click', () => {
-    if (!getDisplayValue()) return
-    if (getDisplayValue().startsWith('-')) {
-      setDisplayValue(getDisplayValue().slice(1))
+    if (!state.displayValue) return
+    if (state.displayValue.startsWith('-')) {
+      state.displayValue = state.displayValue.slice(1)
     } else {
-      setDisplayValue('-' + getDisplayValue())
+      state.displayValue = '-' + state.displayValue
     }
+    render()
   })
 
   document.querySelector('#all-clear').addEventListener('click', () => {
-    clearDisplay()
     state.operandA = null
     state.operandB = null
     state.operator = null
+    state.displayValue = ''
+    render()
   })
 
   document.querySelector('#clear-entry').addEventListener('click', () => {
-    clearDisplay()
+    state.displayValue = ''
+    render()
   })
 
   document.querySelector('#back').addEventListener('click', () => {
-    setDisplayValue(getDisplayValue().slice(0, -1))
+    state.displayValue = state.displayValue.slice(0, -1)
+    render()
   })
 }

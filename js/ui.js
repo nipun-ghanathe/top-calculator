@@ -1,13 +1,7 @@
+import { state } from './state.js'
+
 const display = document.querySelector('.display')
 
-export function getDisplayValue() {
-  return display.value
-}
-
-export function setDisplayValue(value) {
-  display.value = value
-}
-
-export function clearDisplay() {
-  display.value = ''
+export function render() {
+  display.value = state.displayValue
 }

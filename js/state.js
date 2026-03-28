@@ -3,6 +3,7 @@ export const state = {
   operandB: null,
   operator: null,
   clearDisplay: false,
+  displayValue: '',
 }
 
 const operations = {
